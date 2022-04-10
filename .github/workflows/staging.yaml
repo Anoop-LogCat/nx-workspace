@@ -1,0 +1,54 @@
+name: Staging Build and Deploy
+
+on:
+  push:
+    branches: [main]
+
+env:
+  NODE_ENV: staging
+  DOCKER_BUILDKIT: 1
+  stage: staging
+
+jobs:
+  build:
+    name: Build Project
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_REGISTRY: ghcr.io/Anoop-LogCat
+
+    steps:
+      - name: Read the Source Code
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Set up Node JS
+        uses: actions/setup-node@v1
+        with:
+          node-version: '16.14.2'
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+
+      - name: Create docker image tag
+        id: image-tag
+        env:
+          ATTEMPT: ${{ github.run_attempt }}
+        run: echo "::set-output name=docker-tag::$(echo ${GITHUB_SHA} | cut -c1-8)-${GITHUB_RUN_ID}-${ATTEMPT}"
+
+      - name: NX Build, Docker Build and Docker Push
+        env:
+          PASSPHRASE_STAGING: ${{ secrets.PASSPHRASE_STAGING }}
+          IMAGE_TAG: ${{ steps.image-tag.outputs.docker-tag }}
+        run: |-
+          npm ci --prefer-offline --no-audit  --ignore-scripts --also=dev
+          make decrypt-env-stage passphrase=$PASSPHRASE_STAGING stage=$stage
+          make create-env-stage stage=$stage
+          npx nx run-many --target=build --all
+          npx nx run-many --target=docker --all

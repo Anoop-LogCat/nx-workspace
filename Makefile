@@ -1,6 +1,8 @@
 NAME_development=nx-workspace-development
+NAME_staging=nx-workspace-staging
 
 COMPOSE_FILE_development=./deployments/development/docker-compose-development.yml
+COMPOSE_FILE_staging=./deployments/staging/docker-compose-staging.yml
 
 BASE_PATH=$(PWD)
 NODE_VERSION=`node -v`
@@ -184,6 +186,20 @@ decrypt-envs:
 	@echo
 	@./scripts/decrypt.sh "$(PWD)" "$(PASSPHRASE_PRODUCTION)" "production"
 
+decrypt-env-stage:
+	@echo
+	@echo "🚀Decrypt secrets $(stage)"
+	@echo
+	@chmod +x ./scripts/decrypt.sh
+	@./scripts/decrypt.sh "$(PWD)" "$(passphrase)" "$(stage)"
+
+create-env-stage:
+	@echo
+	@echo "🚀Moving secrets of $(stage) to .env"
+	@echo
+	@chmod +x ./scripts/create-env.sh
+	@./scripts/create-env.sh "$(PWD)" "$(stage)"
+
 build:
 	@echo
 	@echo "🏭 Building $(stage) service containers"
@@ -274,4 +290,5 @@ create-seed:
 	--from-table auth.account_roles \
 	--from-table auth.account_providers \
   --from-table auth.refresh_tokens \
-	--from-table users
+	--from-table users \
+  --from-table to_dos
