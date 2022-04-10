@@ -14,7 +14,7 @@ jobs:
     name: Build Project
     runs-on: ubuntu-latest
     env:
-      GITHUB_REGISTRY: ghcr.io/Anoop-LogCat
+      GITHUB_REGISTRY: ghcr.io/anoop-logcat
 
     steps:
       - uses: actions/checkout@v2
