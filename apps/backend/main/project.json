@@ -40,8 +40,8 @@
         "file": "apps/backend/main/Dockerfile",
         "push": true,
         "tags": [
-          "$GCP_REGISTRY/nx-workspace-backend-main:latest",
-          "$GCP_REGISTRY/nx-workspace-backend-main:$IMAGE_TAG"
+          "$GITHUB_REGISTRY/nx-workspace-backend-main:latest",
+          "$GITHUB_REGISTRY/nx-workspace-backend-main:$IMAGE_TAG"
         ]
       }
     },

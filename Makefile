@@ -1,6 +1,8 @@
 NAME_development=nx-workspace-development
+NAME_staging=nx-workspace-staging
 
 COMPOSE_FILE_development=./deployments/development/docker-compose-development.yml
+COMPOSE_FILE_staging=./deployments/staging/docker-compose-staging.yml
 
 BASE_PATH=$(PWD)
 NODE_VERSION=`node -v`

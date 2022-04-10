@@ -17,8 +17,8 @@
             "context": "services/hasura",
             "push": true,
             "tags": [
-              "$GCP_REGISTRY/nx-workspace-auto-migration:latest",
-              "$GCP_REGISTRY/nx-workspace-auto-migration:$IMAGE_TAG"
+              "$GITHUB_REGISTRY/nx-workspace-auto-migration:latest",
+              "$GITHUB_REGISTRY/nx-workspace-auto-migration:$IMAGE_TAG"
             ]
           }
         }
@@ -35,8 +35,8 @@
             "context": "services/hasura-backend-plus",
             "push": true,
             "tags": [
-              "$GCP_REGISTRY/nx-workspace-hasura-backend-plus:latest",
-              "$GCP_REGISTRY/nx-workspace-hasura-backend-plus:$IMAGE_TAG"
+              "$GITHUB_REGISTRY/nx-workspace-hasura-backend-plus:latest",
+              "$GITHUB_REGISTRY/nx-workspace-hasura-backend-plus:$IMAGE_TAG"
             ]
           }
         }

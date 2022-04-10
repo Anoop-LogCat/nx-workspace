@@ -36,8 +36,8 @@
         "file": "apps/frontend/main/Dockerfile",
         "push": true,
         "tags": [
-          "$GCP_REGISTRY/nx-workspace-frontend-main:latest",
-          "$GCP_REGISTRY/nx-workspace-frontend-main:$IMAGE_TAG"
+          "$GITHUB_REGISTRY/nx-workspace-frontend-main:latest",
+          "$GITHUB_REGISTRY/nx-workspace-frontend-main:$IMAGE_TAG"
         ]
       }
     },
