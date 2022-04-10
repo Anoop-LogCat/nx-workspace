@@ -4,6 +4,43 @@
     "backend-main": "apps/backend/main",
     "codegen-sdk": "libs/codegen-sdk",
     "frontend-main": "apps/frontend/main",
-    "frontend-main-e2e": "apps/frontend/main-e2e"
+    "frontend-main-e2e": "apps/frontend/main-e2e",
+
+    "auto-migration": {
+      "root": "services/hasura",
+      "sourceRoot": "services/hasura",
+      "projectType": "library",
+      "targets": {
+        "docker": {
+          "executor": "@nx-tools/nx-docker:build",
+          "options": {
+            "context": "services/hasura",
+            "push": true,
+            "tags": [
+              "$GCP_REGISTRY/nx-workspace-auto-migration:latest",
+              "$GCP_REGISTRY/nx-workspace-auto-migration:$IMAGE_TAG"
+            ]
+          }
+        }
+      }
+    },
+    "hasura-backend-plus": {
+      "root": "services/hasura-backend-plus",
+      "sourceRoot": "services/hasura-backend-plus",
+      "projectType": "library",
+      "targets": {
+        "docker-build": {
+          "executor": "@nx-tools/nx-docker:build",
+          "options": {
+            "context": "services/hasura-backend-plus",
+            "push": true,
+            "tags": [
+              "$GCP_REGISTRY/nx-workspace-hasura-backend-plus:latest",
+              "$GCP_REGISTRY/nx-workspace-hasura-backend-plus:$IMAGE_TAG"
+            ]
+          }
+        }
+      }
+    }
   }
 }

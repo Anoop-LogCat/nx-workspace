@@ -10,6 +10,7 @@
         "outputPath": "dist/apps/backend/main",
         "main": "apps/backend/main/src/main.ts",
         "tsConfig": "apps/backend/main/tsconfig.app.json",
+        "generatePackageJson":true,
         "assets": ["apps/backend/main/src/assets"]
       },
       "configurations": {
@@ -30,6 +31,18 @@
       "executor": "@nrwl/node:node",
       "options": {
         "buildTarget": "backend-main:build"
+      }
+    },
+    "docker": {
+      "executor": "@nx-tools/nx-docker:build",
+      "options": {
+        "context": "dist/apps/backend/main",
+        "file": "apps/backend/main/Dockerfile",
+        "push": true,
+        "tags": [
+          "$GCP_REGISTRY/nx-workspace-backend-main:latest",
+          "$GCP_REGISTRY/nx-workspace-backend-main:$IMAGE_TAG"
+        ]
       }
     },
     "lint": {

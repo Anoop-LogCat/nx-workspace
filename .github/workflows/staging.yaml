@@ -1,0 +1,59 @@
+name: Staging Build and Deploy
+
+on:
+  push:
+    branches: [main]
+
+env:
+  NODE_ENV: staging
+  DOCKER_BUILDKIT: 1
+  stage: staging
+
+jobs:
+  build:
+    name: Build Project
+    runs-on: ubuntu-latest
+    env:
+      PROJECT_ID: nx-workspace-346809
+      GCP_REGISTRY: gcr.io/nx-workspace-346809
+
+    steps:
+      - name: Read the Source Code
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Set up Node JS
+        uses: actions/setup-node@v1
+        with:
+          node-version: '16.14.2'
+
+      - name: Set up GCP Cloud
+        uses: google-github-actions/setup-gcloud@master
+        with:
+          service_account_key: ${{secrets.SERVICE_ACCOUNT_KEY}}
+          project_id: ${{env.PROJECT_ID}}
+          export_default_credentials: true
+
+      - name: Create docker image tag
+        id: image-tag
+        env:
+          ATTEMPT: ${{ github.run_attempt }}
+        run: echo "::set-output name=docker-tag::$(echo ${GITHUB_SHA} | cut -c1-8)-${GITHUB_RUN_ID}-${ATTEMPT}"
+
+      - name: Configure Docker Client
+        run: |-
+          gcloud auth configure-docker --quiet
+
+      - name: NX Build, Docker Build and Docker Push
+        env:
+          PASSPHRASE_STAGING: ${{ secrets.PASSPHRASE_STAGING }}
+          IMAGE_TAG: ${{ steps.image-tag.outputs.docker-tag }}
+        run: |-
+          npm ci --prefer-offline --no-audit  --ignore-scripts --also=dev
+          make decrypt-env-stage passphrase=$PASSPHRASE_STAGING stage=$stage
+          make create-env-stage stage=$stage
+          npx nx run-many --target=build --configuration=$stage --all
+          npx nx run-many --target=docker --all

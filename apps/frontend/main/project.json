@@ -9,7 +9,8 @@
       "defaultConfiguration": "production",
       "options": {
         "root": "apps/frontend/main",
-        "outputPath": "dist/apps/frontend/main"
+        "outputPath": "dist/apps/frontend/main",
+        "generatePackageJson":true
       },
       "configurations": {
         "production": {}
@@ -26,6 +27,18 @@
           "buildTarget": "frontend-main:build:production",
           "dev": false
         }
+      }
+    },
+    "docker": {
+      "executor": "@nx-tools/nx-docker:build",
+      "options": {
+        "context": "dist/apps/frontend/main",
+        "file": "apps/frontend/main/Dockerfile",
+        "push": true,
+        "tags": [
+          "$GCP_REGISTRY/nx-workspace-frontend-main:latest",
+          "$GCP_REGISTRY/nx-workspace-frontend-main:$IMAGE_TAG"
+        ]
       }
     },
     "export": {
