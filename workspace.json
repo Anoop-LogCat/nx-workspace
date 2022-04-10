@@ -1,4 +1,9 @@
 {
   "version": 2,
-  "projects": {}
+  "projects": {
+    "backend-main": "apps/backend/main",
+    "codegen-sdk": "libs/codegen-sdk",
+    "frontend-main": "apps/frontend/main",
+    "frontend-main-e2e": "apps/frontend/main-e2e"
+  }
 }
