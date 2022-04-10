@@ -29,7 +29,7 @@
       "sourceRoot": "services/hasura-backend-plus",
       "projectType": "library",
       "targets": {
-        "docker-build": {
+        "docker": {
           "executor": "@nx-tools/nx-docker:build",
           "options": {
             "context": "services/hasura-backend-plus",
