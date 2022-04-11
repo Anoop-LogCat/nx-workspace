@@ -41,6 +41,25 @@
           }
         }
       }
+    },
+    "caddy": {
+      "root": "services/caddy",
+      "sourceRoot": "services/caddy",
+      "projectType": "library",
+      "targets": {
+        "docker": {
+          "executor": "@nx-tools/nx-docker:build",
+          "options": {
+            "context": "services/caddy/environments/$stage",
+            "file": "services/caddy/Dockerfile",
+            "push": true,
+            "tags": [
+              "$GITHUB_REGISTRY/nx-workspace-caddy:latest",
+              "$GITHUB_REGISTRY/nx-workspace-caddy:$IMAGE_TAG"
+            ]
+          }
+        }
+      }
     }
   }
 }

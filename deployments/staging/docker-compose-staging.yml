@@ -37,6 +37,8 @@ services:
   backend-main:
     image: $GITHUB_REGISTRY/nx-workspace-backend-main:$IMAGE_TAG
     restart: always
+    ports:
+      - '3333:3333'
     depends_on:
       - 'auto-migrations'
     env_file: $BASE_PATH/apps/backend/main/.env.staging
@@ -44,9 +46,25 @@ services:
   fontend-main:
     image: $GITHUB_REGISTRY/nx-workspace-frontend-main:$IMAGE_TAG
     restart: always
+    ports:
+      - '3000:3000'
     depends_on:
       - 'backend-main'
     env_file: $BASE_PATH/apps/frontend/main/.env.staging
+
+  caddy:
+    image: $GITHUB_REGISTRY/nx-workspace-caddy:$IMAGE_TAG
+    build:
+      context: .
+      dockerfile: $BASE_PATH/deployments/base-images/Dockerfile.caddy-runner
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '443:443'
+      - '2019:2019'
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
 
 volumes:
   db_data:
