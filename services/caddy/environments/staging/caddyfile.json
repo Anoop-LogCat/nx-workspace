@@ -1,0 +1,41 @@
+{
+  "admin": {
+    "disabled": false,
+    "listen": "0.0.0.0:2019",
+    "enforce_origin": false,
+    "origins": [""],
+    "config": {
+      "persist": true
+    }
+  },
+  "apps": {
+    "http": {
+      "servers": {
+        "nx-workspace": {
+          "@id": "nx-workspace",
+          "listen": [":443"],
+          "routes": [
+            {
+              "handle": [
+                {
+                  "handler": "reverse_proxy",
+                  "upstreams": [{ "dial": "hasura:8080" }]
+                }
+              ],
+              "match": [{ "host": ["gql.stage.zingain.com"] }]
+            },
+            {
+              "handle": [
+                {
+                  "handler": "reverse_proxy",
+                  "upstreams": [{ "dial": "fontend-main:3000" }]
+                }
+              ],
+              "match": [{ "host": ["stage.zingain.com"] }]
+            }
+          ]
+        }
+      }
+    }
+  }
+}
